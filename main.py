@@ -21,6 +21,9 @@ while True:
   
         if not tasks:
             print("No tasks yet.")
+        else:
+            for task in tasks:
+                print(f"{task[0]}: {task[1]}")
 
 
     elif choice == "2":
@@ -28,8 +31,7 @@ while True:
         tasks = show_not_comleted()
         if not tasks:
             print("No incomplete tasks.")
-        # for t in tasks:
-        #     print(f"{t[0]}: {t[1]}")
+
 
     elif choice == "3":
         task = input("Enter a new task: ")

@@ -25,7 +25,7 @@ def show_all_tasks():
     with get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute("SELECT * FROM todo")
-            print(cur.fetchall())
+            return cur.fetchall()
         conn.commit()
 
     
@@ -33,7 +33,7 @@ def show_not_comleted():
     with get_connection() as conn:
         with conn.cursor() as cur: 
             cur.execute("SELECT id, task FROM todo WHERE status = FALSE")
-            print(cur.fetchall())
+            return cur.fetchall()
         conn.commit()
 
 
