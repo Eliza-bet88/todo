@@ -10,7 +10,6 @@ def create_table():
                 status BOOLEAN)
             """)
 
-
 def add_task(task, status=False):
     with get_connection() as conn:
         with conn.cursor() as cur:
@@ -36,6 +35,12 @@ def show_not_comleted():
             return cur.fetchall()
         conn.commit()
 
+def show_completed():
+    with get_connection() as conn:
+        with conn.cursor() as cur: 
+            cur.execute("SELECT id, task FROM todo WHERE status = TRUE")
+            return cur.fetchall()
+        conn.commit()
 
 def update_task_status(task_id):
     with get_connection() as conn:
@@ -48,9 +53,3 @@ def delete_tasks(task_id):
             with conn.cursor() as cur:
                 cur.execute("DELETE FROM todo WHERE id = %s", (task_id,))
             conn.commit()
-
-
-
-
-
-        

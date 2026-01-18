@@ -1,62 +1,40 @@
-from op import *
+from fastapi import FastAPI
+from op import (
+    create_table,
+    show_all_tasks,
+    show_not_comleted,
+    show_completed,
+    add_task,
+    update_task_status,
+    delete_tasks,
+)
 
-
+app = FastAPI()
 create_table()
 
-def menu():
-    print("1 - Show all tasks")
-    print("2 - Show incomplete tasks")
-    print("3 - Add a task")
-    print("4 - Mark a task as done")
-    print("5 - Delete a task")
-    print("0 - Exit")
+@app.get("/tasks")
+def get_all_tasks():
+    return show_all_tasks()
 
-while True:
-    menu()
-    choice = input("Enter command: ")
+@app.get("/tasks/completed")
+def get_completed_tasks():
+    return show_completed()
 
-    if choice == "1":
-        print("\nALL TASKS:")
-        tasks = show_all_tasks()
-  
-        if not tasks:
-            print("No tasks yet.")
-        else:
-            for task in tasks:
-                print(f"{task[0]}: {task[1]}")
+@app.get("/tasks/incomplete")
+def get_incomplete_tasks():
+    return show_not_comleted()
 
+@app.post("/tasks")
+def create_task(task: str):
+    add_task(task)
+    return {"status": "task added", "task": task}
 
-    elif choice == "2":
-        print("\nINCOMPLETE TASKS:")
-        tasks = show_not_comleted()
-        if not tasks:
-            print("No incomplete tasks.")
+@app.put("/tasks/{task_id}")
+def mark_task_done(task_id: int):
+    update_task_status(task_id)
+    return {"status": "task updated", "id": task_id}
 
-
-    elif choice == "3":
-        task = input("Enter a new task: ")
-        add_task(task)
-        print("Task added!")
-
-    elif choice == "4":
-        try:
-            task_id = int(input("Enter the ID of the task to mark as done: "))
-            update_task_status(task_id)
-            print("Task updated!")
-        except ValueError:
-            print("Please enter a valid ID!")
-
-    elif choice == "5":
-        try:
-            task_id = int(input("Enter the ID"))
-            delete_tasks(task_id)
-            print("Task deleted!")
-        except ValueError:
-            print("Please enter a valid ID!")
-
-    elif choice == "0":
-        print("Bye!")
-        break
-
-    else:
-        print("error")
+@app.delete("/tasks/{task_id}")
+def remove_task(task_id: int):
+    delete_tasks(task_id)
+    return {"status": "task deleted", "id": task_id}
