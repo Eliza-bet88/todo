@@ -10,6 +10,17 @@ def create_table():
                 status BOOLEAN)
             """)
 
+def create_table():
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+            CREATE TABLE IF NOT EXISTS login (
+                id serial PRIMARY KEY,
+                email TEXT,
+                password TEXT)
+            """)
+
+
 
 def add_task(task, status=False):
     with get_connection() as conn:
