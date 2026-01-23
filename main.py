@@ -1,60 +1,49 @@
-from op import *
+from fastapi import FastAPI
+from op import * 
 
-
+app = FastAPI()
 create_table()
 
-def menu():
-    print("1 - Show all tasks")
-    print("2 - Show incomplete tasks")
-    print("3 - Add a task")
-    print("4 - Mark a task as done")
-    print("5 - Delete a task")
-    print("0 - Exit")
+@app.post("/login" )
+def login(email,password):
 
-while True:
-    menu()
-    choice = input("Enter command: ")
-
-    if choice == "1":
-        print("\nALL TASKS:")
-        tasks = show_all_tasks()
-  
-        if not tasks:
-            print("No tasks yet.")
+    user = login_user(email,password)
+    # if user: 
+    #     return app.status.HTTP_200_OK 
 
 
-    elif choice == "2":
-        print("\nINCOMPLETE TASKS:")
-        tasks = show_not_comleted()
-        if not tasks:
-            print("No incomplete tasks.")
-        # for t in tasks:
-        #     print(f"{t[0]}: {t[1]}")
+@app.post("/register")
+def registr_api(email: str, password: str):
+    register(email, password)
+    return {"status": "user added"}
 
-    elif choice == "3":
-        task = input("Enter a new task: ")
-        add_task(task)
-        print("Task added!")
+@app.get("/tasks")
+def get_all_tasks():
+    return show_all_tasks()
 
-    elif choice == "4":
-        try:
-            task_id = int(input("Enter the ID of the task to mark as done: "))
-            update_task_status(task_id)
-            print("Task updated!")
-        except ValueError:
-            print("Please enter a valid ID!")
+# @app.get("/tasks/completed")
+# def get_completed_tasks():
+#     return show_completed()
 
-    elif choice == "5":
-        try:
-            task_id = int(input("Enter the ID"))
-            delete_tasks(task_id)
-            print("Task deleted!")
-        except ValueError:
-            print("Please enter a valid ID!")
+@app.get("/tasks/incomplete")
+def get_incomplete_tasks():
+    return show_not_comleted()
 
-    elif choice == "0":
-        print("Bye!")
-        break
+@app.post("/tasks")
+def create_task(task: str, user_id):
+    add_task(task, user_id)
+    return {"status": "task added", "task": task}
 
-    else:
-        print("error")
+@app.put("/tasks/{task_id}")
+def mark_task_done(task_id: int):
+    update_task_status(task_id)
+    return {"status": "task updated", "id": task_id}
+
+@app.delete("/tasks/{task_id}")
+def remove_task(task_id: int):
+    delete_tasks(task_id)
+    return {"status": "task deleted", "id": task_id}
+
+if __name__ == "__main__":
+   import uvicorn
+   uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
