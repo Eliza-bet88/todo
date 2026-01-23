@@ -1,5 +1,17 @@
 from db import get_connection
 
+
+def register(email,password):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("INSERT INTO userr(email,password) VALUES(%s, %s)")
+
+def login_user(email,password):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id FROM userr WHERE email = %s AND password = %s")
+    
+
 def create_table():
     with get_connection() as conn:
         with conn.cursor() as cur:
@@ -14,7 +26,7 @@ def create_table():
     with get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute("""
-            CREATE TABLE IF NOT EXISTS login (
+            CREATE TABLE IF NOT EXISTS userr (
                 id serial PRIMARY KEY,
                 email TEXT,
                 password TEXT)
