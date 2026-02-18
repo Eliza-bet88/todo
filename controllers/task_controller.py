@@ -28,6 +28,9 @@ class TaskController:
     def get_completed_tasks(self, session: Session):
         return session.query(Task).filter(Task.status == True).all()
     
+    def get_task_by_id(self, session: Session, task_id: int):
+        return session.query(Task).filter(Task.id == task_id).first()
+    
     def mark_task_done(self, session: Session, task_id: int):
         task = session.query(Task).filter(Task.id == task_id).first()
         
