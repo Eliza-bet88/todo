@@ -10,4 +10,5 @@ class User(Base):
     password = Column(String, nullable=False)
     
     tasks = relationship("Task", back_populates="user", cascade="all, delete-orphan")
+    tokens = relationship("Token", back_populates="user", cascade="all, delete-orphan")
     
